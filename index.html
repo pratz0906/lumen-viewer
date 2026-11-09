@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="/src/styles.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lumen Viewer</title>
+    <script type="module" src="/src/main.ts" defer></script>
+  </head>
+
+  <body>
+    <div id="stage">
+      <img id="photo" alt="" draggable="false" />
+    </div>
+
+    <!-- Title bar: app name (also the drag handle) and the standard caption buttons. -->
+    <div id="titlebar" data-tauri-drag-region>
+      <span id="title" data-tauri-drag-region>Lumen Viewer</span>
+      <div id="titlebuttons">
+        <button data-action="minimize" title="Minimize">&#xE921;</button>
+        <button data-action="toggle-max" id="max-button" title="Restore down (F11)">&#xE923;</button>
+        <button data-action="close" class="close" title="Close (Esc)">&#xE8BB;</button>
+      </div>
+    </div>
+
+    <div id="message" hidden>
+      <p id="message-text">Open an image with Lumen Viewer to view it here.</p>
+      <div class="message-actions">
+        <button data-action="default">Set as default viewer</button>
+        <button data-action="close">Close</button>
+      </div>
+    </div>
+
+    <div id="confirm" hidden role="dialog" aria-modal="true" aria-labelledby="confirm-text">
+      <p id="confirm-text"></p>
+      <label class="remember">
+        <input type="checkbox" id="confirm-remember" />
+        Make this the default: delete without asking next time
+      </label>
+      <div class="message-actions">
+        <button data-answer="yes">Yes</button>
+        <button data-answer="no">No</button>
+      </div>
+    </div>
+
+    <div id="bar" hidden>
+      <button data-action="prev" title="Previous (←)">&#x2039;</button>
+      <button data-action="next" title="Next (→)">&#x203A;</button>
+      <span class="sep"></span>
+      <button data-action="zoom-out" title="Zoom out (-)">&minus;</button>
+      <span id="zoom-label">100%</span>
+      <button data-action="zoom-in" title="Zoom in (+)">+</button>
+      <button data-action="fit" title="Fit to screen (0)">Fit</button>
+      <button data-action="actual" title="Actual size (1)">1:1</button>
+      <span class="sep"></span>
+      <button data-action="rotate-left" title="Rotate left (L)">&#x21BA;</button>
+      <button data-action="rotate-right" title="Rotate right (R)">&#x21BB;</button>
+      <span class="sep"></span>
+      <span id="counter"></span>
+      <button data-action="default" title="Set Lumen Viewer as the default image viewer">Default</button>
+      <button data-action="close" title="Close (Esc)">&#x2715;</button>
+    </div>
+  </body>
+</html>

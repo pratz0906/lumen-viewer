@@ -1,0 +1,251 @@
+:root {
+  font-family: "Segoe UI", Inter, Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  color: #f5f5f5;
+  --panel: rgba(20, 20, 22, 0.78);
+  --panel-border: rgba(255, 255, 255, 0.12);
+  --button-hover: rgba(255, 255, 255, 0.14);
+  -webkit-font-smoothing: antialiased;
+}
+
+html {
+  background: transparent;
+}
+
+/* Black backdrop at 60% transparency: the desktop shows through, dimmed. */
+html,
+body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  user-select: none;
+}
+
+body {
+  background: rgba(0, 0, 0, 0.4);
+}
+
+#stage {
+  position: fixed;
+  inset: 0;
+  cursor: default;
+}
+
+#photo {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform-origin: center center;
+  max-width: none;
+  max-height: none;
+  cursor: grab;
+  opacity: 0;
+  image-rendering: auto;
+}
+
+#photo.loaded {
+  opacity: 1;
+}
+
+#photo.animate {
+  transition: transform 0.14s ease-out;
+}
+
+#photo.dragging {
+  cursor: grabbing;
+}
+
+/* Zoomed far in: show crisp pixels. */
+#photo.pixelated {
+  image-rendering: pixelated;
+}
+
+#bar {
+  position: fixed;
+  left: 50%;
+  bottom: 28px;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 6px 8px;
+  border-radius: 12px;
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  pointer-events: none;
+}
+
+#bar.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+#bar[hidden],
+#confirm[hidden],
+#message[hidden] {
+  display: none;
+}
+
+button {
+  min-width: 34px;
+  height: 32px;
+  padding: 0 10px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: var(--button-hover);
+}
+
+button:focus-visible {
+  outline: 2px solid #6ea8ff;
+  outline-offset: 1px;
+}
+
+#zoom-label,
+#counter {
+  min-width: 52px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.85;
+}
+
+.sep {
+  width: 1px;
+  height: 20px;
+  margin: 0 6px;
+  background: var(--panel-border);
+}
+
+/* Title bar with the app name and standard Windows-style caption buttons. */
+#titlebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  background: var(--panel);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--panel-border);
+}
+
+#title {
+  flex: 1;
+  min-width: 0;
+  padding-left: 14px;
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  opacity: 0.9;
+}
+
+#titlebuttons {
+  display: flex;
+  height: 100%;
+}
+
+#titlebuttons button {
+  width: 46px;
+  height: 32px;
+  min-width: 0;
+  padding: 0;
+  border-radius: 0;
+  font-family: "Segoe Fluent Icons", "Segoe MDL2 Assets", sans-serif;
+  font-size: 10px;
+}
+
+#titlebuttons button.close:hover {
+  background: #c42b1c;
+  color: #fff;
+}
+
+/* Restored (windowed) mode: outline the window's bounds. */
+body.windowed {
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.18);
+}
+
+#message {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  max-width: 420px;
+  padding: 22px 24px;
+  border-radius: 14px;
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  backdrop-filter: blur(12px);
+  text-align: center;
+}
+
+#confirm {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  z-index: 20;
+  transform: translate(-50%, -50%);
+  width: min(420px, calc(100vw - 32px));
+  box-sizing: border-box;
+  padding: 22px 24px;
+  border-radius: 14px;
+  background: rgba(24, 24, 26, 0.96);
+  border: 1px solid var(--panel-border);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  text-align: center;
+}
+
+#confirm p {
+  margin: 0 0 14px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+#confirm .remember {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  font-size: 12px;
+  opacity: 0.85;
+  cursor: pointer;
+}
+
+#confirm .message-actions button {
+  min-width: 80px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+#confirm [data-answer="yes"] {
+  background: #c42b1c;
+}
+
+#message p {
+  margin: 0 0 16px;
+  line-height: 1.5;
+}
+
+.message-actions {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.message-actions button {
+  background: rgba(255, 255, 255, 0.1);
+}

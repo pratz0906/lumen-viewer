@@ -1,0 +1,68 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Lumen Viewer",
+  "version": "0.1.0",
+  "identifier": "com.lumen.viewer",
+  "build": {
+    "beforeDevCommand": "npm run dev",
+    "devUrl": "http://localhost:1420",
+    "beforeBuildCommand": "npm run build",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "withGlobalTauri": true,
+    "windows": [
+      {
+        "label": "main",
+        "title": "Lumen Viewer",
+        "width": 1280,
+        "height": 800,
+        "center": true,
+        "fullscreen": true,
+        "transparent": true,
+        "decorations": false,
+        "shadow": false,
+        "alwaysOnTop": true,
+        "resizable": true,
+        "minWidth": 480,
+        "minHeight": 320,
+        "visible": false
+      }
+    ],
+    "security": {
+      "csp": null,
+      "assetProtocol": {
+        "enable": true,
+        "scope": ["**"]
+      }
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": ["nsis"],
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "fileAssociations": [
+      { "ext": ["jpg", "jpeg", "jfif"], "name": "LumenViewer.JPEG", "description": "JPEG image", "role": "Viewer" },
+      { "ext": ["png"], "name": "LumenViewer.PNG", "description": "PNG image", "role": "Viewer" },
+      { "ext": ["gif"], "name": "LumenViewer.GIF", "description": "GIF image", "role": "Viewer" },
+      { "ext": ["bmp"], "name": "LumenViewer.BMP", "description": "Bitmap image", "role": "Viewer" },
+      { "ext": ["webp"], "name": "LumenViewer.WEBP", "description": "WebP image", "role": "Viewer" },
+      { "ext": ["tif", "tiff"], "name": "LumenViewer.TIFF", "description": "TIFF image", "role": "Viewer" },
+      { "ext": ["ico"], "name": "LumenViewer.ICO", "description": "Icon image", "role": "Viewer" }
+    ],
+    "windows": {
+      "webviewInstallMode": { "type": "embedBootstrapper" },
+      "nsis": {
+        "installMode": "both",
+        "installerHooks": "./installer.nsh",
+        "displayLanguageSelector": false
+      }
+    }
+  }
+}
