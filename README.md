@@ -1,7 +1,41 @@
-# Tauri + Vanilla TS
+# Lumen Viewer
 
-This template should help get you started developing with Tauri in vanilla HTML, CSS and Typescript.
+A fast photo viewer for Windows. Opening an image shows it over a dimmed, see-through background that covers the screen.
 
-## Recommended IDE Setup
+Built with [Tauri 2](https://tauri.app) (Rust + TypeScript).
 
-- [VS Code](https://code.visualstudio.com/) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
+## Download
+
+Get the installer (`Lumen Viewer_x.y.z_x64-setup.exe`) from the [Releases](../../releases) page. During setup you can:
+
+- install for just yourself or for all users,
+- choose the install folder,
+- make Lumen Viewer your default image viewer.
+
+After installing, Lumen Viewer also appears under **right-click → Open with** for jpg, jpeg, jfif, png, gif, bmp, webp, tif, tiff and ico files. TIFF files aren't displayed yet.
+
+## Controls
+
+| Action | Keys / mouse |
+| --- | --- |
+| Zoom in / out | Mouse wheel, `↑` / `↓`, `+` / `-` |
+| Fit to screen / actual size | `0` / `1`, or double-click |
+| Pan | Drag the image |
+| Previous / next image in folder | `←` / `→`, PageUp / PageDown |
+| First / last image | Home / End |
+| Rotate | `L` / `R` |
+| Move to Recycle Bin | Delete (Shift+Delete always asks) |
+| Full screen / window | F11 or the maximize button |
+| Close | Esc or ✕ |
+
+## Building from source
+
+Requirements: Rust, Node.js, and the Visual Studio C++ Build Tools.
+
+```sh
+npm install
+npm run tauri dev -- -- "C:\path\to\photo.jpg"   # run in development
+npm run tauri build                              # build the installer
+```
+
+The installer is written to `src-tauri/target/release/bundle/nsis/`.
