@@ -55,8 +55,14 @@ fn image_set_for(file: &Path) -> Option<ImageSet> {
 fn image_set_from_args(args: &[String], cwd: &Path) -> Option<ImageSet> {
     args.iter().skip(1).find_map(|a| {
         let p = Path::new(a);
-        let p = if p.is_absolute() { p.to_path_buf() } else { cwd.join(p) };
-        (p.is_file() && is_image(&p)).then(|| image_set_for(&p)).flatten()
+        let p = if p.is_absolute() {
+            p.to_path_buf()
+        } else {
+            cwd.join(p)
+        };
+        (p.is_file() && is_image(&p))
+            .then(|| image_set_for(&p))
+            .flatten()
     })
 }
 
@@ -100,7 +106,11 @@ pub fn run() {
             }
         }))
         .manage(Initial(Mutex::new(initial)))
-        .invoke_handler(tauri::generate_handler![take_initial, move_to_recycle_bin, open_default_apps])
+        .invoke_handler(tauri::generate_handler![
+            take_initial,
+            move_to_recycle_bin,
+            open_default_apps
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

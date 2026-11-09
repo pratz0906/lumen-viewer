@@ -35,6 +35,10 @@ let fitted = true;
 let shown = false;
 const preloaded = new Map<string, HTMLImageElement>();
 
+function fileName(path: string): string {
+  return path.split(/[\\/]/).pop() ?? path;
+}
+
 // ---- view ----------------------------------------------------------------
 
 function naturalSize(): { w: number; h: number } {
@@ -112,8 +116,7 @@ function show(i: number): void {
   photo.classList.remove("loaded");
   photo.src = convertFileSrc(files[index]);
   counter.textContent = files.length > 1 ? `${index + 1} / ${files.length}` : "";
-  const name = files[index].split(/[\\/]/).pop();
-  titleEl.textContent = `${name} - Lumen Viewer`;
+  titleEl.textContent = `${fileName(files[index])} - Lumen Viewer`;
   void win.setTitle(titleEl.textContent);
 
   // Keep only the neighbours cached.
@@ -137,7 +140,7 @@ photo.addEventListener("load", () => {
 });
 
 photo.addEventListener("error", () => {
-  const name = files[index]?.split(/[\\/]/).pop() ?? "This file";
+  const name = files[index] ? fileName(files[index]) : "This file";
   showMessage(`${name} can't be displayed. The format may not be supported.`);
 });
 
@@ -214,7 +217,7 @@ function confirmDelete(name: string): Promise<boolean> {
 async function requestDelete(forceAsk: boolean): Promise<void> {
   if (files.length === 0) return;
   const path = files[index];
-  const name = path.split(/[\\/]/).pop() ?? path;
+  const name = fileName(path);
   if ((forceAsk || askBeforeDelete()) && !(await confirmDelete(name))) return;
 
   try {
@@ -230,6 +233,7 @@ async function requestDelete(forceAsk: boolean): Promise<void> {
     photo.classList.remove("loaded");
     bar.hidden = true;
     titleEl.textContent = "Lumen Viewer";
+    void win.setTitle("Lumen Viewer");
     showMessage("No more images in this folder.");
   } else {
     show(Math.min(index, files.length - 1));
@@ -249,12 +253,12 @@ stage.addEventListener(
   { passive: false },
 );
 
-let drag: { x: number; y: number; tx: number; ty: number; moved: boolean } | null = null;
+let drag: { x: number; y: number; tx: number; ty: number } | null = null;
 
 stage.addEventListener("pointerdown", (e) => {
   if (e.button !== 0) return;
   if (e.target === photo) {
-    drag = { x: e.clientX, y: e.clientY, tx, ty, moved: false };
+    drag = { x: e.clientX, y: e.clientY, tx, ty };
     photo.setPointerCapture(e.pointerId);
     photo.classList.add("dragging");
   }
@@ -262,11 +266,8 @@ stage.addEventListener("pointerdown", (e) => {
 
 stage.addEventListener("pointermove", (e) => {
   if (!drag) return;
-  const dx = e.clientX - drag.x;
-  const dy = e.clientY - drag.y;
-  if (Math.abs(dx) + Math.abs(dy) > 3) drag.moved = true;
-  tx = drag.tx + dx;
-  ty = drag.ty + dy;
+  tx = drag.tx + e.clientX - drag.x;
+  ty = drag.ty + e.clientY - drag.y;
   fitted = false;
   render();
 });
@@ -293,12 +294,6 @@ window.addEventListener("keydown", (e) => {
     case "Escape":
       close();
       break;
-    case "ArrowUp":
-      zoomCentre(ZOOM_STEP);
-      break;
-    case "ArrowDown":
-      zoomCentre(1 / ZOOM_STEP);
-      break;
     case "Delete":
       void requestDelete(e.shiftKey);
       break;
@@ -321,10 +316,12 @@ window.addEventListener("keydown", (e) => {
     case "End":
       show(files.length - 1);
       break;
+    case "ArrowUp":
     case "+":
     case "=":
       zoomCentre(ZOOM_STEP);
       break;
+    case "ArrowDown":
     case "-":
     case "_":
       zoomCentre(1 / ZOOM_STEP);
