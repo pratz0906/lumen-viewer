@@ -35,7 +35,9 @@ Requirements: Rust, Node.js, and the Visual Studio C++ Build Tools.
 ```sh
 npm install
 npm run tauri dev -- -- "C:\path\to\photo.jpg"   # run in development
-npm run tauri build                              # build the installer
+npm run release                                  # build the installer
 ```
+
+`npm run release` runs `tauri build` with your home folder path stripped from the executable, so a shared build doesn't reveal your username.
 
 The installer is written to `src-tauri/target/release/bundle/nsis/`.
